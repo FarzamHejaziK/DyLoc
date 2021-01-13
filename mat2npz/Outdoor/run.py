@@ -46,3 +46,17 @@ M5 = np.float32(M5)
 
 
 np.savez_compressed('testframes.npz', CLADP = M1, CLADPL = M2, CLADPNL = M3, CLADPANL = M4, Loc = M5)
+
+data = load('moving-mnist-train.npz')
+
+file = 'Moving_ADP_O13p5.csv'
+M = np.array(pd.read_csv(file, header = None))
+M = np.reshape(M,(200000,1,64,64))
+np.savez_compressed('moving-ADP-train-O1.npz', clips = data['clips'], dims = data['dims'] , input_raw_data = M)
+
+data = load('moving-mnist-test.npz')
+
+file = 'Moving_ADP_test_O13p5.csv'
+M = np.array(pd.read_csv(file, header = None))
+M = np.reshape(M,(40000,1,64,64))
+np.savez_compressed('moving-ADP-test-O1.npz', clips = data['clips'], dims = data['dims'] , input_raw_data = M)
