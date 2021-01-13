@@ -31,6 +31,14 @@ Finally, everything is available to test DyLoc. Copy PredRNN weights to "PredRNN
 
 In case you dont want to bother yourself running matlab codes. All reqired .npz files can be found in [Datasets](https://drive.google.com/drive/folders/1zXTY_Kx6ODgQFKLPeeEJ-ax2rfIZyAxR?usp=sharing). You need to copy and paste them in Data folder for doing the correspong job! Having this foler there is no need for running any Matlab codes or conversion from CSV to NPZ.
 
+## Data Folder
+
+The Data folder that you can download from google drive contains:
+
+- TrainDCNN1.npz (I3) and DCNNtrain.npz (O1): Containing all possible CSI-Location pairs all over the environments
+- TestframesI2.npz (I3) and TestframesO1.npz (O1): Containing 1000 time series of 20 frames for all three dynamic scenarios used for testing DyLoc
+- moving-ADP-train-O1.npz (I3) and moving-ADP-train-I3.npz (O1): Containing 10000 time series of 20 frames training PredRNN
+
 ## Get Rid of Training Neural Networks
 
 If you dont want to bother training and testing networks, we left weights files that can be used by the networks, so just download the "Data" folder and run the "run.py" and enjoy! 
