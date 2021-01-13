@@ -19,15 +19,14 @@ parser.add_argument('--device', type=str, default='cuda:0')
 
 # dataC:C:\Users\Nazanin\OneDrive - University of Central Florida\predrnn-pytorch-master\data\moving-mnist-example\moving-distortedADP-valid.npz
 parser.add_argument('--dataset_name', type=str, default='mnist')
-parser.add_argument('--train_data_paths', type=str, default='data/moving-ADP-train.npz')
-parser.add_argument('--valid_data_paths', type=str, default='data/moving-ADP-test.npz')
+parser.add_argument('--train_data_paths', type=str, default='data/moving-ADP-train-O1.npz')
+parser.add_argument('--valid_data_paths', type=str, default='data/moving-ADP-train-O1.npz')
 parser.add_argument('--save_dir', type=str, default='checkpoints/mnist_predrnn')
 parser.add_argument('--gen_frm_dir', type=str, default='results/mnist_predrnn')
 parser.add_argument('--input_length', type=int, default=10)
 parser.add_argument('--total_length', type=int, default=20)
 parser.add_argument('--img_width', type=int, default=64)
 parser.add_argument('--img_channel', type=int, default=1)
-
 # model
 parser.add_argument('--model_name', type=str, default='predrnn')
 parser.add_argument('--pretrained_model', type=str, default='')
