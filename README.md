@@ -46,11 +46,8 @@ If you have any question regarding the codes, dont hesitate to contact me at far
 
 ## Comments for Farzam 
 
-Add CSV to npz conversion for Moving datasets (both Test and Train) 
-
 Add comments within the codes 
 
 Remove .ipynb folder from KNNCNN folder
 
-Change the name of CSVs that store results in the code
 
