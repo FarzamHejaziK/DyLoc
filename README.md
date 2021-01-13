@@ -54,8 +54,3 @@ If you have any question regarding the codes, dont hesitate to contact me at far
 
 ## Comments for Farzam 
 
-Add comments within the codes 
-
-Remove .ipynb folder from KNNCNN folder
-
-
