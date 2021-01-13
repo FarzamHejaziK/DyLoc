@@ -1,4 +1,4 @@
-% Added NLOS  
+% Added NLOS path to ADP 
 
 function ADP=ANLOS(H,Nt,Nc,xbios,ybios)
 % H=DeepMIMO_dataset{1}.user{(4000)}.channel;

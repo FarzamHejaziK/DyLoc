@@ -1,27 +1,25 @@
 
 format short g
 
+
+%% Generating training dataset
 for iii = 1 : 10000
     iii
 
 clearvars -except iii DeepMIMO_dataset
 
 % DeepMIMO_dataset=DeepMIMO_Dataset_Generator;
-N = 20;
-W = 110; 
-L = 121;
+N = 20;  % Number of Frames
+W = 110; % length of the test Dataset, e.g. from R100 to R200
+L = 121; % length of each rows (from DeepMIMO website)
 Nt = 32 ;  % Number of antennas at BS
 Nc = 32 ;  % Number of Subcarriers 
-% for iiii=1:25
-% iiii
+
 P=RandomWalk2(N,W,L,DeepMIMO_dataset);
 
 for K=1:N
 H = DeepMIMO_dataset{1}.user{P(K)}.channel;
 L = DeepMIMO_dataset{1}.user{P(K)}.loc;
-% Loc = DeepMIMO_dataset{1}.user{P(K)}.loc;
-% Channel(iiii,K,:,:) = H;
-% Location(iiii,K,:,:,:) = Loc;
 
  
 
@@ -51,6 +49,9 @@ dlmwrite('Moving_ADP_I3.csv',abs(ADP),'delimiter',',','-append','precision',4);
 
 
 end
+
+
+%% Generating Testing dataset
 
 for iii = 1 : 2000
     iii

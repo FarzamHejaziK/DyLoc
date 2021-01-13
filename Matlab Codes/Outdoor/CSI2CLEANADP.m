@@ -1,3 +1,5 @@
+%% Cleaning ADP (Zeroing close to zero elements)
+
 function [ADP] = CSI2CLEANADP(H,Nt,Nc,Thr)
 %% CSI to Code
 [Lloc,Power,Asmin,Asmax,Dsmin,Dsmax] = ADPtocode(H,Nt,Nc,Thr);

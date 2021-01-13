@@ -1,3 +1,5 @@
+%% Blocking LOS in ADP
+
 function [ADP] = CSI2CLEANADPLOSBLOCKED(H,Nt,Nc,Thr1,Thr2)
 %% CSI to Code
 [Lloc,Power,Asmin,Asmax,Dsmin,Dsmax] = ADPtocode(H,Nt,Nc,Thr1);

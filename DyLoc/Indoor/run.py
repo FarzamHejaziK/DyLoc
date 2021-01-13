@@ -39,6 +39,8 @@ import csv
 import numpy as np
 
 
+
+## Check if ADP is distorted or Accurate, Algorithm 1 of the paper
 def Loc_Credible(ADP,Loc,Loc_database,ADP_database,Previous_Loc):
     if len(Previous_Loc) > 0 and  np.linalg.norm(Loc - Previous_Loc) > 0.2 :
         out = 'Location is not Credible'
@@ -56,93 +58,7 @@ def Loc_Credible(ADP,Loc,Loc_database,ADP_database,Previous_Loc):
     out = 'Location is not Credible'
     return out
 
-
-
-def Loc_ADP_Recovery(ADP,Pred_ADP,Previous_Loc,Loc_database,ADP_database):
-    KNN = np.where((np.linalg.norm(Loc_database - Previous_Loc, axis = 1 ) < 0.1))
-    KNN = np.asarray(KNN).T
-    W = []
-    if (np.linalg.norm(FP_Localizer(Pred_ADP) - Previous_Loc) > 0.1):
-        Pred_Loc = Previous_Loc
-    else:
-        Pred_Loc = FP_Localizer(Pred_ADP)
-
-    if not(np.isnan(mse(ADP_database[KNN[0]],ADP))):
-            W = mse(ADP_database[KNN[0]],ADP)
-            KNN_Loc = Loc_database[KNN[0]]
-            KNN_ADP = ADP_database[KNN[0]]
-
-    for idx in KNN[1:len(KNN)]:
-        if not(np.isnan(mse(ADP_database[idx],ADP))):
-            W = np.append(W,mse(ADP_database[idx],ADP))
-            KNN_Loc = np.append(KNN_Loc, Loc_database[idx], axis = 0)
-            KNN_ADP = np.append(KNN_ADP, ADP_database[idx], axis = 0)
-
-    PredADP = np.reshape(Pred_ADP,(1,32,32))
-    if not(np.isnan(mse(PredADP,ADP))):
-        W = np.append(W,mse(PredADP,ADP))
-        KNN_Loc = np.append(KNN_Loc,np.reshape(Pred_Loc,(1,3)), axis = 0)
-        KNN_ADP = np.append(KNN_ADP,PredADP, axis = 0)
-    Est_Loc = np.zeros((1,3))
-    Est_ADP = np.zeros((32,32))
-    
-    if not(len(W) == 0):
-        W = W/(np.sum(W))
-        
-        for i in range(0,len(W)):
-            Est_Loc = Est_Loc + W[i] * KNN_Loc[i]
-            Est_ADP = Est_ADP + W[i] * KNN_ADP[i]
-    else:
-        Est_Loc = Pred_Loc
-        Est_ADP = np.reshape(Pred_ADP[0],(32,32))
-    return Est_Loc, Est_ADP
-
-def Loc_ADP_Recovery_WO_Pred(ADP,Pred_ADP,Previous_Loc,Loc_database,ADP_database):
-    KNN = np.where((np.linalg.norm(Loc_database - Previous_Loc, axis = 1 ) < 1))
-    KNN = np.asarray(KNN).T
-    W = []
-    Pred_Loc = Previous_Loc
-
-    if not(np.isnan(mse(ADP_database[KNN[0]],ADP))):
-            W = mse(ADP_database[KNN[0]],ADP)
-            KNN_Loc = Loc_database[KNN[0]]
-            KNN_ADP = ADP_database[KNN[0]]
-
-    for idx in KNN[1:len(KNN)]:
-        if not(np.isnan(mse(ADP_database[idx],ADP))):
-            W = np.append(W,mse(ADP_database[idx],ADP))
-            KNN_Loc = np.append(KNN_Loc, Loc_database[idx], axis = 0)
-            KNN_ADP = np.append(KNN_ADP, ADP_database[idx], axis = 0)
-
-    PredADP = np.reshape(Pred_ADP,(1,32,32))
-    if not(np.isnan(mse(PredADP,ADP))):
-        W = np.append(W,mse(PredADP,ADP))
-        KNN_Loc = np.append(KNN_Loc,np.reshape(Pred_Loc,(1,3)), axis = 0)
-        KNN_ADP = np.append(KNN_ADP,PredADP, axis = 0)
-    Est_Loc = np.zeros((1,3))
-    Est_ADP = np.zeros((32,32))
-    
-    if not(len(W) == 0):
-        W = W/(np.sum(W))
-        for i in range(0,len(W)):
-            Est_Loc = Est_Loc + W[i] * KNN_Loc[i]
-            Est_ADP = Est_ADP + W[i] * KNN_ADP[i]
-    else:
-        Est_Loc = Pred_Loc
-        Est_ADP = np.reshape(Pred_ADP,(32,32))
-    return Est_Loc, Est_ADP
-
-
-def Loc_ADP_Recovery_Only_Pred(Pred_ADP):
-    Est_Loc = FP_Localizer_TF2D(Pred_ADP)
-    Est_ADP = np.reshape(Pred_ADP,(32,32))
-    return Est_Loc, Est_ADP
-
-
-
-
-
-
+## This Function Is the Second Algorithm pf the paper
 def Loc_ADP_Recovery_TF2D(ADP,Pred_ADP,Previous_Loc,Loc_database,ADP_database,model):
     #plt.figure()
     #plt.imshow(np.reshape(ADP,(64,64)))
@@ -202,15 +118,14 @@ def Loc_ADP_Recovery_TF2D(ADP,Pred_ADP,Previous_Loc,Loc_database,ADP_database,mo
     #Est_ADP = np.reshape(PredADP[0],(64,64))
     return Est_Loc, Est_ADP
 
-
-
+## This is the DCNN output
 def Loc_ADP_Recovery_Only_Pred_TF2D(Pred_ADP,model):
     Est_Loc = FP_Localizer_TF2D(Pred_ADP,model)
     #Est_Loc = CNN_KNN(Pred_ADP,20,50,model1)
     Est_ADP = np.reshape(Pred_ADP,(32,32))
     return Est_Loc, Est_ADP
 
-
+## This function is the Normalized Correlation of (7)
 def mse(imageA, imageB):
     A = np.matrix.flatten(imageA)
     B = np.matrix.flatten(imageB)
@@ -224,18 +139,21 @@ def mse(imageA, imageB):
     # return the MSE, the lower the error, the more "similar"
   # the two images are
     return err
-
-DCNNmodel = tf.keras.models.load_model('DCNNweights/Weights-145--0.01163.hdf5')
-
+## Localization using DCNN
 def FP_Localizer_TF2D(ADP,model):  
     ADP = np.reshape(ADP,(1,32,32,1))
     Prediction = model.predict(ADP)
     return Prediction
+
+## DCNN Model load
+DCNNmodel = tf.keras.models.load_model('DCNNweights/Weights-145--0.01163.hdf5')
+
+
 ## Data Entry
 # Output of PredRNN
 
 
-# Database
+# Reading Database
 training_database_path ='Data/TrainDCNNI1.npz'
 database = load(training_database_path)
 print(database['ADP'].shape)
@@ -245,7 +163,7 @@ Loc_database = database['Loc']
 ADP_database = database['ADP']
 ADP_database = np.reshape(ADP_database,(66550,32,32))
 
-# Test frames Load
+# Reading Test frames
 data_path ='Data/testframesI2.npz'
 data = load(data_path)
 
@@ -272,8 +190,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--is_training', type=int, default=0)
 parser.add_argument('--device', type=str, default='cuda:0')
 
-# dataC:C:\Users\Nazanin\OneDrive - University of Central Florida\predrnn-pytorch-master\data\moving-mnist-example\moving-distortedADP-valid.npz
-parser.add_argument('--dataset_name', type=str, default='mnist')
+
 parser.add_argument('--train_data_paths', type=str, default='/content/drive/My Drive/My Code Cleaned/data/Predicted-ADP-1.npz')
 parser.add_argument('--valid_data_paths', type=str, default='/content/drive/My Drive/My Code Cleaned/data/Predicted-ADP-1.npz')
 parser.add_argument('--save_dir', type=str, default='checkpoints/mnist_predrnn')
@@ -334,13 +251,12 @@ def mytest(input, model):
     return out
 
 
-#gpu_list = np.asarray(os.environ.get('CUDA_VISIBLE_DEVICES', '-1').split(','), dtype=np.int32)
-#args.n_gpu = len(gpu_list)
 print('Initializing models')
 
+## PredRNN Model Init
 model = Model(args)
 
-
+## Data Preparation for LOS Bloackage Scenario
 Credible_Est_Loc = np.zeros((1000,20,3))
 Credible_Est_ADP = np.zeros((1000,20,32,32))
 Loc_Est_Error_CLADPL = np.zeros((1000,20,1))
@@ -348,18 +264,20 @@ Loc_Est_Error_CNN_FP_CLADPL = np.zeros((1000,20,1))
 Loc_Est_Error_WO_Pred_CLADPL = np.zeros((1000,20,1))
 Loc_Est_Error_CNN_FP_PredRNN_CLADPL = np.zeros((1000,10,1))
 
-
+## PredRNN Model Load
 model.load(args.pretrained_model)
 
+## Testing LOS blockage Scenario 
 for i in range(0,1000):
         print(i)
-        # Creating a test data
+        # Reading test data
         test_series1 = np.reshape(CLADPL_series[i,:,:,:],(20,32,32))
         test_series = test_series1
         test_series_Loc = Loc_series[i,:,:]
         Estimated_Loc_FP = np.zeros((20,3))
         PredADP = np.zeros((1, 10, 32, 32, 1))
         start_time = time.time()
+        ## Appying DyLoc frame by frame
         for j in range(0,20):
             Estimated_Loc_FP[j] = FP_Localizer_TF2D(test_series1[j:j+1],DCNNmodel)
             if j > 0 and Loc_Credible(test_series1[j:j+1],Estimated_Loc_FP[j],Loc_database,ADP_database ,Credible_Est_Loc[i,j-1]) == 'Location is Credible':
@@ -383,14 +301,6 @@ for i in range(0,1000):
                     Credible_Est_ADP[i,j] = np.reshape(CredADP,(32,32))
                 else:
                     PredADP = mytest(Credible_Est_ADP[i,j-10:j], model)
-
-                    '''plt.figure(1)
-                    plt.imshow(PredADP[0, 0, :, :, 0])
-                    plt.figure(2)
-                    plt.imshow(Credible_Est_ADP[i,j-1,:,])
-                    plt.show()
-                    if j == 19:
-                        sys.exit()'''
                     Credible_Est_Loc[i,j], CredADP = Loc_ADP_Recovery_TF2D(test_series1[j],np.reshape(PredADP[0, 0, :, :, 0],(1,32*32)),Credible_Est_Loc[i,j-1],Loc_database,ADP_database,DCNNmodel)
                     Credible_Est_ADP[i,j] = np.reshape(CredADP,(32,32))
             if j > 9 :
@@ -402,10 +312,13 @@ for i in range(0,1000):
         print("--- %s seconds ---" % (time.time() - start_time))
 print('finish')
 
+## Saving Results
 np.savetxt('Results/FullSystemerror_LOSBlocked.csv', np.reshape(Loc_Est_Error_CLADPL,(1000,20)), delimiter=',')
 np.savetxt('Results/FPerror_LOSBlocked.csv', np.reshape(Loc_Est_Error_CNN_FP_CLADPL,(1000,20)), delimiter=',')
 np.savetxt('Results/Prederror_LOSBlocked.csv', np.reshape(Loc_Est_Error_CNN_FP_PredRNN_CLADPL,(1000,10)), delimiter=',')
 
+
+## Data Preparation for NLOS Bloackage Scenario
 Credible_Est_Loc = np.zeros((1000,20,3))
 Credible_Est_ADP = np.zeros((1000,20,32,32))
 Loc_Est_Error_CLADPNL = np.zeros((1000,20,1))
@@ -413,15 +326,21 @@ Loc_Est_Error_CNN_FP_CLADPNL = np.zeros((1000,20,1))
 Loc_Est_Error_WO_Pred_CLADPNL = np.zeros((1000,20,1))
 Loc_Est_Error_CNN_FP_PredRNN_CLADPNL = np.zeros((1000,10,1))
 
+
+## Testing NLOS blockage Scenario 
 for i in range(0,1000):
         print(i)
-        # Creating a test data
+        # Reading test data
+
         test_series1 = np.reshape(CLADPNL_series[i,:,:,:],(20,32,32))
         test_series = test_series1
         test_series_Loc = Loc_series[i,:,:]
         Estimated_Loc_FP = np.zeros((20,3))
         PredADP = np.zeros((1, 10, 32, 32, 1))
         start_time = time.time()
+
+        ## Appying DyLoc frame by frame
+
         for j in range(0,20):
             Estimated_Loc_FP[j] = FP_Localizer_TF2D(test_series1[j:j+1],DCNNmodel)
             if j > 0 and Loc_Credible(test_series1[j:j+1],Estimated_Loc_FP[j],Loc_database,ADP_database ,Credible_Est_Loc[i,j-1]) == 'Location is Credible':
@@ -445,14 +364,6 @@ for i in range(0,1000):
                     Credible_Est_ADP[i,j] = np.reshape(CredADP,(32,32))
                 else:
                     PredADP = mytest(Credible_Est_ADP[i,j-10:j], model)
-
-                    '''plt.figure(1)
-                    plt.imshow(PredADP[0, 0, :, :, 0])
-                    plt.figure(2)
-                    plt.imshow(Credible_Est_ADP[i,j-1,:,])
-                    plt.show()
-                    if j == 19:
-                        sys.exit()'''
                     Credible_Est_Loc[i,j], CredADP = Loc_ADP_Recovery_TF2D(test_series1[j],np.reshape(PredADP[0, 0, :, :, 0],(1,32*32)),Credible_Est_Loc[i,j-1],Loc_database,ADP_database,DCNNmodel)
                     Credible_Est_ADP[i,j] = np.reshape(CredADP,(32,32))
             if j > 9 :
@@ -464,10 +375,13 @@ for i in range(0,1000):
         print("--- %s seconds ---" % (time.time() - start_time))
 print('finish')
 
+## Saving Results
 np.savetxt('Results/FullSystemerror_NLOSBlocked.csv', np.reshape(Loc_Est_Error_CLADPNL,(1000,20)), delimiter=',')
 np.savetxt('Results/FPerror_NLOSBlocked.csv', np.reshape(Loc_Est_Error_CNN_FP_CLADPNL,(1000,20)), delimiter=',')
 np.savetxt('Results/Prederror_NLOSBlocked.csv', np.reshape(Loc_Est_Error_CNN_FP_PredRNN_CLADPNL,(1000,10)), delimiter=',')
 
+
+## Data Preparation for added NLOS Scenario
 Credible_Est_Loc = np.zeros((1000,20,3))
 Credible_Est_ADP = np.zeros((1000,20,32,32))
 Loc_Est_Error_CLADPANL = np.zeros((1000,20,1))
@@ -475,15 +389,22 @@ Loc_Est_Error_CNN_FP_CLADPANL = np.zeros((1000,20,1))
 Loc_Est_Error_WO_Pred_CLADPANL = np.zeros((1000,20,1))
 Loc_Est_Error_CNN_FP_PredRNN_CLADPANL = np.zeros((1000,10,1))
 
+
+## Testing Added NLOS Scenario 
 for i in range(0,1000):
+
         print(i)
-        # Creating a test data
+        # Reading test data
+
         test_series1 = np.reshape(CLADPANL_series[i,:,:,:],(20,32,32))
         test_series = test_series1
         test_series_Loc = Loc_series[i,:,:]
         Estimated_Loc_FP = np.zeros((20,3))
         PredADP = np.zeros((1, 10, 32, 32, 1))
         start_time = time.time()
+
+        ## Appying DyLoc frame by frame
+
         for j in range(0,20):
             Estimated_Loc_FP[j] = FP_Localizer_TF2D(test_series1[j:j+1],DCNNmodel)
             if j > 0 and Loc_Credible(test_series1[j:j+1],Estimated_Loc_FP[j],Loc_database,ADP_database ,Credible_Est_Loc[i,j-1]) == 'Location is Credible':
@@ -507,14 +428,6 @@ for i in range(0,1000):
                     Credible_Est_ADP[i,j] = np.reshape(CredADP,(32,32))
                 else:
                     PredADP = mytest(Credible_Est_ADP[i,j-10:j], model)
-
-                    '''plt.figure(1)
-                    plt.imshow(PredADP[0, 0, :, :, 0])
-                    plt.figure(2)
-                    plt.imshow(Credible_Est_ADP[i,j-1,:,])
-                    plt.show()
-                    if j == 19:
-                        sys.exit()'''
                     Credible_Est_Loc[i,j], CredADP = Loc_ADP_Recovery_TF2D(test_series1[j],np.reshape(PredADP[0, 0, :, :, 0],(1,32*32)),Credible_Est_Loc[i,j-1],Loc_database,ADP_database,DCNNmodel)
                     Credible_Est_ADP[i,j] = np.reshape(CredADP,(32,32))
             if j > 9 :
@@ -525,6 +438,8 @@ for i in range(0,1000):
             Loc_Est_Error_CNN_FP_CLADPANL [i,j] = np.linalg.norm(Estimated_Loc_FP[j] - test_series_Loc[j])
         print("--- %s seconds ---" % (time.time() - start_time))
 print('finish')
+
+## Saving Results
 
 np.savetxt('Results/FullSystemerror_NLOSAdded.csv', np.reshape(Loc_Est_Error_CLADPANL,(1000,20)), delimiter=',')
 np.savetxt('Results/FPerror_NLOSAdded.csv', np.reshape(Loc_Est_Error_CNN_FP_CLADPANL,(1000,20)), delimiter=',')

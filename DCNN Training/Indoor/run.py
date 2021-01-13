@@ -25,7 +25,7 @@ import math
 warnings.filterwarnings('ignore')
 warnings.filterwarnings('ignore', category=DeprecationWarning)
 
-
+## Data Preparation to feed the CNN training
 def get_data():
     #get train data
     data_path ='Data/TrainDCNNI1.npz'
@@ -38,6 +38,8 @@ def get_data():
 
 train_ADP, test_ADP, train_Loc, test_Loc = get_data()
 
+
+## Neural Network Artitechture and Training
 with tf.device("gpu:0"):
     NN_model = Sequential()
 # The Input Layer :

@@ -1,3 +1,5 @@
+## For furthur details regarding PredRNN Please refer to https://github.com/thuml/predrnn-pytorch
+
 __author__ = 'yunbo'
 
 import os

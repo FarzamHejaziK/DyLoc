@@ -1,3 +1,5 @@
+## For furthur details regarding PredRNN Please refer to https://github.com/thuml/predrnn-pytorch
+
 __author__ = 'yunbo'
 
 import os
@@ -139,10 +141,10 @@ if os.path.exists(args.gen_frm_dir):
     shutil.rmtree(args.gen_frm_dir)
 os.makedirs(args.gen_frm_dir)
 
-#gpu_list = np.asarray(os.environ.get('CUDA_VISIBLE_DEVICES', '-1').split(','), dtype=np.int32)
-#args.n_gpu = len(gpu_list)
+
 print('Initializing models')
 
+## Model Training 
 model = Model(args)
 
 if args.is_training:

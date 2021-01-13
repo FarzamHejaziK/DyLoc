@@ -14,7 +14,7 @@ import math
 warnings.filterwarnings('ignore')
 warnings.filterwarnings('ignore', category=DeprecationWarning)
 
-
+## Data Preparation For DCNN Training
 def get_data():
     #get train data
     data_path ='Data/DCNN-train.npz'
@@ -27,6 +27,7 @@ def get_data():
 
 train_ADP, test_ADP, train_Loc, test_Loc = get_data()
 
+## DCNN Artitecture and Trianing
 with tf.device("gpu:0"):
     NN_model = Sequential()
 # The Input Layer :

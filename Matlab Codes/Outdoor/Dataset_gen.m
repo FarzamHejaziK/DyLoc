@@ -1,22 +1,24 @@
 
 format short g
-N = 20;
-W = 110; 
-L = 181;
+N = 20;  % Number of Frames
+W = 1100; % length of the test Dataset, e.g. from R100 to R200
+L = 181; % length of each rows (from DeepMIMO website)
 Nt = 64 ;  % Number of antennas at BS
 Nc = 64 ;  % Number of Subcarriers
 
-for iii = 1 : 110 * 121
+for iii = 1 : 1100 * 121
 clearvars -except iii DeepMIMO_dataset iji 
 iii
-N = 20;
-W = 1100; 
-L = 121;
+N = 20;  % Number of Frames
+W = 1100; % length of the test Dataset, e.g. from R100 to R200
+L = 181; % length of each rows (from DeepMIMO website)
 Nt = 64 ;  % Number of antennas at BS
 Nc = 64 ;  % Number of Subcarriers 
 Thr1 = 50;
 Thr2 = 10;
 
+
+% reading dataset from struct array
 H = DeepMIMO_dataset{1}.user{iii}.channel;
 Loc = DeepMIMO_dataset{1}.user{iii}.loc;
 

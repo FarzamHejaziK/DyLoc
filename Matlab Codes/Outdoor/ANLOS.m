@@ -1,9 +1,6 @@
-% Added NLOS  
+% Addeding NLOS to the ADP  
 
 function ADP=ANLOS(H,Nt,Nc,xbios,ybios)
-% H=DeepMIMO_dataset{1}.user{(4000)}.channel;
-% Nt = 64 ;  % Number of antennas at BS
-% Nc = 32 ;  % Number of Subcarriers 
 
 %% Constructing V
 V = zeros(Nt,Nt);

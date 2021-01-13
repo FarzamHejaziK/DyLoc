@@ -1,3 +1,4 @@
+%% Converting CSI to ADP
 function [ADP] = CSI2ADP(H,Nt,Nc)
 %%
 V = zeros(Nt,Nt);
