@@ -24,10 +24,11 @@ import time
 import random
 import math
 
+#grid size
 xnum = 18
 ynum = 55
 
-
+# MSE is use similarity measure between two images
 def mse(imageA, imageB):
     A = np.matrix.flatten(imageA)
     B = np.matrix.flatten(imageB)
@@ -41,20 +42,29 @@ def mse(imageA, imageB):
     # return the MSE, the lower the error, the more "similar"
   # the two images are
     return err
+
+# CNN_KNN is a 2 part classifier. First it uses trained CNN network to classify the ADP to a grid. 
+# Then it uses WKNN to do a search within the grid to further improve accuracy. 
+#Input: ADP, size of grid and trained CNN Model (classifier for first part)
+#Output: estiamted (x,y) location corresponding to the input ADP. 
 def CNN_KNN(ADP,xnum,ynum,model1):
-  num_classes = xnum * ynum
+  num_classes = xnum * ynum #number of classses for CNN
   tot_accuracy = np.zeros(num_classes)
-  k = 3
+  k = 3 #k in knn
   csort = (-1)*np.ones(k)
   xtest = ADP
   
-  
+   # Model predicts with grid (class) the ADP belongs to. 
+  # This is the first part of the classifier (CNN)
   xtest = np.reshape(xtest,(1,64,64,1))
   ypred = model1.predict(xtest)
   
   pred = np.argmax(ypred, axis = 1) 
   #Load data
   
+    #Load training data computed in "MakeADPgrid.py"
+  # Only loads data for the given class computed in ypred. 
+  # For example: If ypred = 3, it will load all ADPs that are contianed within class 3 and their (x,y) location
   train_ADP = np.load('ADP/ADP'+str(int(pred))+'.npy')
   train_c = np.load('ADP/class'+str(int(pred))+'.npy')
   xtrain = np.load('ADP/xtrain'+str(int(pred))+'.npy')
@@ -64,19 +74,18 @@ def CNN_KNN(ADP,xnum,ynum,model1):
   accuracy = 0
   num_correct = 0
   similarity = np.zeros(len(train_ADP))
+   # compute similarity between the ADP input sample (to be classified) and all the samples in the ypred class
   for tr in range(len(train_ADP)):
     x = xtest
     y = train_ADP[tr,:,:]
     #similarity[tr] = jadsc(x, y)
     similarity[tr] = mse(x, y)
-
-
    
-  
+   # Find k (k=3) number of ADPs with the largest similarity to the input (test) ADP
   sim_sort = np.sort(similarity)
   sim_kmax = sim_sort[-k:]
 
-
+  # get (x,y) location corresponding to the k ADPs found above
   csort_x = np.zeros((k))
   csort_y = np.zeros((k))
   ADPout = [k,64,64]
@@ -91,7 +100,8 @@ def CNN_KNN(ADP,xnum,ynum,model1):
     
   xest = 0
   yest = 0
-  # Calaculate weigths
+   # Using similarity as weights, estimate location using weighted-k-nearest-nighbot (WKNN) 
+  # This is the second part of the classifier (WKNN)
   w = np.zeros(k)
   if (sum(sim_kmax)!= 0):
     for i in range(k):
@@ -127,6 +137,7 @@ Estimated_Loc_KNN_CNN1 = np.zeros((20,3))
 Estimated_Loc_KNN_CNN2 = np.zeros((20,3))
 Estimated_Loc_KNN_CNN3 = np.zeros((20,3))
 
+#For all samples in the test data, estimate the location corresponing to the ADP input and calculae the error
 for i in range(0,1000):
     print(i)
     test_series1 = np.reshape(CLADPL_series[i,:,:,:],(20,64,64))
