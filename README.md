@@ -52,5 +52,4 @@ To improve the results significantly specifically for both O1 and I3 environment
 
 If you have any question regarding the codes, dont hesitate to contact me at farzam.hejazi@gmail.com.
 
-## Comments for Farzam 
 
