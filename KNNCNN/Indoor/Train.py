@@ -36,7 +36,7 @@ def get_data(data,xnum,ynum):
     loc = data['Loc']
     x = loc[:,0]
     y = loc[:,1]
-    # Create placeholders for class (grid) and new (X,Y) coordiantes which are at the center of each .
+    # Create placeholders for class (grid) and new (X,Y) coordiantes which are at the center of each grid.
     # Example: If the user is in the mth segment in x-direaction and nth segment in y-direction, the new coordinates are (m,n) and the sample belongs to class c = m*n.
     cnew = np.zeros((len(loc),num_classes))
     c = np.zeros(len(loc))
