@@ -2,7 +2,7 @@
 
 ## Matlab Codes
 
-In order to generates datasets required for training and testing DyLoc, we have to sart with matlab codes,. First of all, you should generate scattring environments using DeepMIMO. 
+In order to generates datasets required for training and testing DyLoc, we have to sart with matlab codes. First of all, you should generate scattring environments using DeepMIMO. 
 The codes for DeepMIMO and instruction for using it can be found in [DeepMIMO](http://www.deepmimo.net/). After you create your environment based on the TABLE I of the paper (or any other arbitrary parameters), you should store the resulted struct array in "DeepMIMO_dataset". Next go the "Matlab Codes" folder. "Dataset_gen.m" generates a dataset (pairs of CSI-Location) for traning DCNN, and "Dataset_gen_FPL.m" generates 1000 testframes for evaluating Dyloc. "Moving_Dataset_gen.m" generates the moving datasets for training and testing PredRNN. All of these three codes save their outout in CSV files.
 
 ## Convert CSV to NPZ
