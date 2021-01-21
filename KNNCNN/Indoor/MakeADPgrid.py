@@ -1,19 +1,19 @@
 import numpy as np
 
-# Define x and y grid size. Must match xnum and ynum in the Train.py
+# Define x and y grid size. Must match xnum and ynum in "Train.py"
 xnum = 18
 ynum = 55
 
-#Function gets validation data and returns (ADP, class) pairs
+#  Function calculates class of each ADP based on the loc data
 # Inputs: raw validation data (ADP, location), and size of (x,y0 grid
 # t - handles ame of location dataset. Can be removed if name of locaiton column is known
 #Outputs: (ADP, class) pairs and new location based on classes (similar to get_data in tarin.py)
 def get_valid_data(data,xnum,ynum,t):
-  # calculate total number of classes
+  # Calculate total number of classes
   num_classes = xnum*ynum
   adp = data['ADP']
   print('adp shape ',adp.shape)
-  # Get DP and (x,y0 location from dataset
+  # Get ADP and (x,y0 location from dataset
   M = np.reshape(adp,(-1,32,32))
   if t ==0 :
     loc = data['Location']
@@ -66,7 +66,7 @@ def get_valid_data(data,xnum,ynum,t):
           print(ymin)
           sys.exit()
 
-   # Assigns classes to dataset based on grid starting with grid(1,1) assigned to c c=1 
+   # Assigns classes to dataset based on grid starting with grid(1,1) assigned to class c=1 
    # and grid (m,n) assigned to class c = m*n.
   for i in range(len(loc)):
       c[i] = (xnew[i]-1)+xnum*(ynew[i]-1)
@@ -78,12 +78,12 @@ def get_valid_data(data,xnum,ynum,t):
   return loc,c, M
 
 
-# For each grid, collect all ADP samples from the training set that belong to the same grid into one group. 
+# For each grid, collect and group all ADP samples from the training set that belong to that grid
 # This means that grid will have a collection of ADPs that belong to this grid and this collection will be used for KNN. 
 def get_sub(subclass,M,c,x,y):
   xnum = 18
   ynum = 55
-  #get train data 
+
   n = 0
   for i in range(len(c)):
     if (c[i]==subclass):
@@ -153,7 +153,7 @@ x_loc = loc_t[:,0]
 y_loc = loc_t[:,1]
 
 for sub in range(num_classes):
-  #For every class on the grid it creates a dataset of ADP, class, and locatioon
+  #For every class on the grid it creates a dataset of (ADP, class, location)
    train_ADP, train_c, xtrain, ytrain = get_sub(sub,ADP_t,c_t,x_loc,y_loc)   
    np.save('ADP/ADP'+str(sub),train_ADP)
    np.save('ADP/class'+str(sub),train_c)
