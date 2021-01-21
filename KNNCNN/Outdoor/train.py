@@ -17,7 +17,7 @@ import numpy as np
 import statistics
 
 
-#Get DCNN Training Data contaitns (ADP, location) pairs
+#Get DCNN training data that consists of (ADP, location) pairs
 data_path1 ='Data/DCNN-train.npz'
 data1 = load(data_path1)
 data = data1
