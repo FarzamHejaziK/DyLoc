@@ -16,17 +16,19 @@ import sys
 import numpy as np
 import statistics
 
-
+#Preparing Data
 #Get DCNN training data that consists of (ADP, location) pairs
 data_path1 ='Data/DCNN-train.npz'
 data1 = load(data_path1)
 data = data1
 # Define size of (X,Y)grid for the area of interest
-# xnum - equally space segnments in x-diration, ynum - equally spaced segnments in y-diraction
+# xnum - equally space segnments in x-diretion, ynum - equally spaced segnments in y-direction
 xnum = 18
 ynum = 55
 num_classes = xnum * ynum #total number of CNN classes based on grid dimensions
 
+# Function assign classes to each ADP based on the location on the grid
+# The output is a training dataset and testing dataset.  Each dataset consists of (ADP, class) pairs
 def get_data(data,xnum,ynum):
     num_classes = xnum*ynum
     # Get ADP and Location pairs from training dataset
@@ -34,8 +36,8 @@ def get_data(data,xnum,ynum):
     loc = data['Loc']
     x = loc[:,0]
     y = loc[:,1]
-    # Create placeholders for datapoint class (grid) and new (X,Y) coordiantes with are at the center of the grid
-    # Example: If the user is in the mth segment in x-direaction and nth segment in y-direction the new coordinates are (m,n) 
+    # Create placeholders for class (grid) and new (X,Y) coordiantes which are at the center of each .
+    # Example: If the user is in the mth segment in x-direaction and nth segment in y-direction, the new coordinates are (m,n) and the sample belongs to class c = m*n.
     cnew = np.zeros((len(loc),num_classes))
     c = np.zeros(len(loc))
     xnew = np.zeros(len(x))
@@ -85,13 +87,13 @@ def get_data(data,xnum,ynum):
         c[i] = (xnew[i]-1)+xnum*(ynew[i]-1)
     c = np.reshape(c,(199100,1))
     
-    #reshapes class matrix to be in appriorate format for further processing
+    # Reshapes class matrix to be in appriorate format for further processing
     for i in range(len(c)):
       cnew[i,int(c[i])] = 1  
     print('cnew shape: ',cnew.shape)
   
 
-    #Splits data consisting of (ADP,class) pair randomly into 90% train and 10% test
+    #Splits data consisting of (ADP,class) pairs randomly into 90% train and 10% test
     train_ADP, test_ADP, train_Loc, test_Loc = train_test_split(M, cnew, test_size=0.1, random_state=42)
     # Function returns 
     # loc - location (x,y) aentire dataset
@@ -103,7 +105,7 @@ def get_data(data,xnum,ynum):
 # Get traing and testing datasets
 loc, c, xtrain,xtest,ytrain,ytest = get_data(data,xnum,ynum)
 
-
+#Training CNN
 from keras.layers import Dense, Activation, Flatten, Conv2D, BatchNormalization, MaxPool2D
 model = Sequential()
 # L = 1
