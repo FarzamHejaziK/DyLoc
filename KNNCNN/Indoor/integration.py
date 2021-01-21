@@ -73,14 +73,14 @@ def CNN_KNN(ADP,xnum,ynum,model1):
   accuracy = 0
   num_correct = 0
   similarity = np.zeros(len(train_ADP))
-   # compute similarity between the ADP input sample (to be classified) and all the samples in teh ypred class
+   # compute similarity between the ADP input sample (to be classified) and all the samples in the ypred class
   for tr in range(len(train_ADP)):
     x = xtest
     y = train_ADP[tr,:,:]
     #similarity[tr] = jadsc(x, y)
     similarity[tr] = mse(x, y)
   
-  # Find k (k=3) number of ADPs with the largest similarity 
+  # Find k (k=3) number of ADPs with the largest similarity to the input (test) ADP
   sim_sort = np.sort(similarity)
   sim_kmax = sim_sort[-k:]
     
