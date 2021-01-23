@@ -23,11 +23,11 @@ import time
 import math
 
 
-#grid size
+# Grid size
 xnum = 18
 ynum = 55
 
-# MSE is use similarity measure between two images
+# MSE is use similarity measure between two images. This is used to compare the similarities between the ADPs.
 def mse(imageA, imageB):
     A = np.matrix.flatten(imageA)
     B = np.matrix.flatten(imageB)
@@ -42,10 +42,10 @@ def mse(imageA, imageB):
  
     return err
 
-# CNN_KNN is a 2 part classifier. First it uses trained CNN network to classify the ADP to a grid. 
+# CNN_KNN is a 2 part classifier. First it uses trained CNN network to classify the ADP to a location on the grid. 
 # Then it uses WKNN to do a search within the grid to further improve accuracy. 
-#Input: ADP, size of grid and trained CNN Model (classifier for first part)
-#Output: estiamted (x,y) location corresponding to the input ADP. 
+# Input: ADP, size of grid and trained CNN Model (first part)
+# Output: estiamted (x,y) location corresponding to the input ADP. 
 def CNN_KNN(ADP,xnum,ynum,model1):
     
   num_classes = xnum * ynum #number of class
@@ -59,21 +59,22 @@ def CNN_KNN(ADP,xnum,ynum,model1):
   xtest = np.reshape(xtest,(1,32,32,1))
   ypred = model1.predict(xtest)
   
-  pred = np.argmax(ypred, axis = 1) 
-  
-  #Load training data computed in "MakeADPgrid.py"
+  pred = np.argmax(ypred, axis = 1) #This is the grid predicted by the CNN Classifier 
+    
+  # Load training data computed in "MakeADPgrid.py"
   # Only loads data for the given class computed in ypred. 
   # For example: If ypred = 3, it will load all ADPs that are contianed within class 3 and their (x,y) location
+  # This gets the data required for the KNN algorithm (second part)
   train_ADP = np.load('ADP/ADP'+str(int(pred))+'.npy')
   train_c = np.load('ADP/class'+str(int(pred))+'.npy')
   xtrain = np.load('ADP/xtrain'+str(int(pred))+'.npy')
   ytrain = np.load('ADP/ytrain'+str(int(pred))+'.npy')
     
-   # initializng accuracy and number of correctly classified samples to zero
+  # initialize accuracy and number of correctly classified samples to zero
   accuracy = 0
   num_correct = 0
   similarity = np.zeros(len(train_ADP))
-   # compute similarity between the ADP input sample (to be classified) and all the samples in the ypred class
+  # Compute similarity between the input ADP sample (to be classified) and all the samples in the ypred class
   for tr in range(len(train_ADP)):
     x = xtest
     y = train_ADP[tr,:,:]
@@ -84,7 +85,7 @@ def CNN_KNN(ADP,xnum,ynum,model1):
   sim_sort = np.sort(similarity)
   sim_kmax = sim_sort[-k:]
     
-   # get (x,y) location corresponding to the k ADPs found above
+   # Get (x,y) location corresponding to the k ADPs found above
   csort_x = np.zeros((k))
   csort_y = np.zeros((k))
   ADPout = [k,32,32]
