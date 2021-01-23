@@ -1,4 +1,4 @@
-% Random Walk  We have 6 possible move 1--8
+% Random Walk  We have 8 possible move 1--8
 function P=Randomwalk2(N,W,L,DeepMIMO_dataset)
 %% Parameters 
 Np = N;  %% number of walk
