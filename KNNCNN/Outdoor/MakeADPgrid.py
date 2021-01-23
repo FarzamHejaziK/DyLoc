@@ -4,9 +4,9 @@ xnum = 18
 ynum = 55
 
 #  Function calculates class of each ADP based on the loc data
-# Inputs: raw validation data (ADP, location), and size of (x,y0 grid
-# t - handles ame of location dataset. Can be removed if name of locaiton column is known
-#Outputs: (ADP, class) pairs and new location based on classes (similar to get_data in tarin.py)
+# Inputs: raw validation data (ADP, location), and size of (x,y) grid
+# t - handles name of location dataset. Can be removed if name of location column is known
+# Outputs: (ADP, class) pairs and new location based on classes (similar to get_data in tarin.py)
 def get_valid_data(data,xnum,ynum,t):
   num_classes = xnum*ynum # calculate total number of classes
   adp = data['ADP']
@@ -63,19 +63,28 @@ def get_valid_data(data,xnum,ynum,t):
           print(ymin)
           sys.exit()
 
-   # Assigns classes to dataset based on grid starting with grid(1,1) assigned to class c=1 
-   # and grid (m,n) assigned to class c = m*n.
+  # Assigns classes to dataset based on grid starting with grid (1,1) assigned to class c=1 and grid (m,n) assigned to class c = m*n.
   for i in range(len(loc)):
       c[i] = (xnew[i]-1)+xnum*(ynew[i]-1)
   c = np.reshape(c,(len(c),1))
 
-     # M - ADP
-   # c - class
+  # M - ADP
+  # c - class
   # location (x,y)
   return loc,c, M
 
-# For each grid, collect and group all ADP samples from the training set that belong to that grid
-# This means that grid will have a collection of ADPs that belong to this grid and this collection will be used for KNN. 
+# For any grid, collect and group all ADP samples from the training set that belong to that grid
+# This means that by calling this function for for each grid there will be a collection of ADPs that belong to that grid. 
+# This collection will later be used for KNN alogirthm to search within. 
+# Input: 
+# subclass - the class for which you want to collect all the ADPs. If you want all the ADPs in the training data beloning to class m, then subclass = m.
+# M - All ADPs in the training data
+# c - total number of class
+# (x,y) loc from training data for all ADPs
+# Outputs:
+# Mnew - All ADPs beloning to the selected subclass m
+# c1 -  class m
+# (xlocnew,ylocnew) new (x,y) location coordinates based on the grid
 def get_sub(subclass,M,c,x,y):
   xnum = 18
   ynum = 55
@@ -91,7 +100,7 @@ def get_sub(subclass,M,c,x,y):
  
   j=0
   
-# for each class i compute the ADP, and (x,Y) location
+  # Search for all (ADP, loc) beloning to the subclass 
   for i in range((len(c))):
     if (c[i]==subclass):
       Mnew[j,:,:]=M[i,:,:]
@@ -109,6 +118,7 @@ def get_sub(subclass,M,c,x,y):
   ymin = min(ylocnew)
   ystep = (ymax-ymin)/ynum
 
+  # Compute new x and y location based on the grid
   for i in range(n):
       for j in range(1,xnum+1):
           low = xmin + (j-1)*xstep
@@ -127,7 +137,7 @@ def get_sub(subclass,M,c,x,y):
           if(y[i] == ymax):
               ynew[i] = ynum
               
- #computes class based on grid
+ # Compute class based on grid
   for i in range(len(c1)):
       c1[i] = (xnew[i]-1)+xnum*(ynew[i]-1)
 
@@ -137,19 +147,18 @@ def get_sub(subclass,M,c,x,y):
   #xlocnew and ylocnew are x and y coordinates
   return Mnew, c1,xlocnew,ylocnew
 
-#loads Train Dataset
+# Loads Train Dataset
 data_path1 ='Data/DCNN-train.npz'
 data1 = np.load(data_path1)
 
-#Takes the dataset and grid size as input
-#outputs ADP, class, and location(x,y)
+# Takes the dataset and grid size as input and outputs ADP, class, and location(x,y)
 loc_t, c_t, ADP_t= get_valid_data(data1,xnum,ynum,1)
 num_classes = xnum*ynum
 x_loc = loc_t[:,0]
 y_loc = loc_t[:,1]
 
 for sub in range(num_classes):
-  #For every class on the grid it creates a dataset of (ADP, class,location)
+  # For every class on the grid it creates a dataset of (ADP, class,location)
    train_ADP, train_c, xtrain, ytrain = get_sub(sub,ADP_t,c_t,x_loc,y_loc)   
    np.save('ADP/ADP'+str(sub),train_ADP)
    np.save('ADP/class'+str(sub),train_c)
