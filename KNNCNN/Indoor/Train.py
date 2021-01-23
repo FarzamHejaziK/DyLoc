@@ -16,18 +16,19 @@ import sys
 import numpy as np
 import statistics
 
-#Preparing Data
-#Get DCNN training data that consists of (ADP, location) pairs
+# Preparing Data
+# Get DCNN training data that consists of (ADP, location) pairs
 data_path1 ='Data/TrainDCNNI1.npz'
 data1 = load(data_path1)
 data = data1
-# Define size of (X,Y)grid for the area of interest
+# Define size of (X,Y) grid for the area of interest
 # xnum - equally space segnments in x-diretion, ynum - equally spaced segnments in y-direction
 xnum = 18
 ynum = 55
 num_classes = xnum * ynum #total number of CNN classes based on grid dimensions
 
 # Function assign classes to each ADP based on the location on the grid
+# The inputs is raw data consiting of ADPs and location (data), and size of the grid (xnum, ynum)
 # The output is a training dataset and testing dataset.  Each dataset consists of (ADP, class) pairs
 def get_data(data,xnum,ynum):
     num_classes = xnum*ynum
@@ -36,13 +37,13 @@ def get_data(data,xnum,ynum):
     loc = data['Loc']
     x = loc[:,0]
     y = loc[:,1]
-    # Create placeholders for class (grid) and new (X,Y) coordiantes which are at the center of each grid.
+    # Create placeholders for class (grid) and new (X,Y) coordinates which are at the center of each grid.
     # Example: If the user is in the mth segment in x-direaction and nth segment in y-direction, the new coordinates are (m,n) and the sample belongs to class c = m*n.
     cnew = np.zeros((len(loc),num_classes))
     c = np.zeros(len(loc))
     xnew = np.zeros(len(x))
     ynew = np.zeros(len(y))
-     # Calcualte step size based on the grid
+     # Calculate step size based on the grid
     xmax = max(x)
     xmin = min(x)
     xstep = (xmax-xmin)/xnum
@@ -80,23 +81,22 @@ def get_data(data,xnum,ynum):
             print(ymin)
             sys.exit()
     
-     # Assigns classes to dataset based on grid starting with grid(1,1) assigned to c c=1 
-    # and grid (m,n) assigned to class c = m*n.
+     # Assign classes to dataset based on grid starting with grid (1,1) assigned to class c=1 and grid (m,n) assigned to class c = m*n.
     for i in range(len(loc)):
         c[i] = (xnew[i]-1)+xnum*(ynew[i]-1)
     c = np.reshape(c,(66550,1))
     
-     # Reshapes class matrix to be in appriorate format for further processing
+     # Reshapes class matrix to be in new format for further processing
     for i in range(len(c)):
       cnew[i,int(c[i])] = 1  
     print('cnew shape: ',cnew.shape)
    
-    #Splits data consisting of (ADP,class) pairs randomly into 90% train and 10% test
+    # Split data consisting of (ADP,class) pairs randomly into 90% train and 10% test
     train_ADP, test_ADP, train_Loc, test_Loc = train_test_split(M, cnew, test_size=0.1, random_state=42)
      
     # Function returns 
-    # loc - location (x,y) aentire dataset
-    # c - class corresponding to loc for etire dataset
+    # loc - location (x,y) for entire dataset
+    # c - class corresponding to loc for entire dataset
     # train_ADP and train_Loc - training dataset pair ADP and class
     # test_ADP and test_Loc - testing dataset pair ADP and class
     return loc,c,train_ADP, test_ADP, train_Loc, test_Loc
