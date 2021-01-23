@@ -3,7 +3,7 @@ import numpy as np
 xnum = 18
 ynum = 55
 
-#  Function calculates class of each ADP based on the loc data
+# Function calculates class of each ADP based on the loc data
 # Inputs: raw validation data (ADP, location), and size of (x,y) grid
 # t - handles name of location dataset. Can be removed if name of location column is known
 # Outputs: (ADP, class) pairs and new location based on classes (similar to get_data in tarin.py)
