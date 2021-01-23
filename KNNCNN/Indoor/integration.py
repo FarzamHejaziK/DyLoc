@@ -59,10 +59,10 @@ def CNN_KNN(ADP,xnum,ynum,model1):
   xtest = np.reshape(xtest,(1,32,32,1))
   ypred = model1.predict(xtest)
   
-  pred = np.argmax(ypred, axis = 1) #This is the grid predicted by the CNN Classifier 
+  pred = np.argmax(ypred, axis = 1) # This is the grid predicted by the CNN Classifier 
     
   # Load training data computed in "MakeADPgrid.py"
-  # Only loads data for the given class computed in ypred. 
+  # Only loads data for the given class computed in ypred 
   # For example: If ypred = 3, it will load all ADPs that are contianed within class 3 and their (x,y) location
   # This gets the data required for the KNN algorithm (second part)
   train_ADP = np.load('ADP/ADP'+str(int(pred))+'.npy')
@@ -70,11 +70,12 @@ def CNN_KNN(ADP,xnum,ynum,model1):
   xtrain = np.load('ADP/xtrain'+str(int(pred))+'.npy')
   ytrain = np.load('ADP/ytrain'+str(int(pred))+'.npy')
     
-  # initialize accuracy and number of correctly classified samples to zero
+  # Initialize accuracy and number of correctly classified samples to zero
   accuracy = 0
   num_correct = 0
   similarity = np.zeros(len(train_ADP))
-  # Compute similarity between the input ADP sample (to be classified) and all the samples in the ypred class
+    
+  # Compute similarity between the input ADP (to be classified) and all the ADP samples in the ypred class
   for tr in range(len(train_ADP)):
     x = xtest
     y = train_ADP[tr,:,:]
@@ -85,7 +86,7 @@ def CNN_KNN(ADP,xnum,ynum,model1):
   sim_sort = np.sort(similarity)
   sim_kmax = sim_sort[-k:]
     
-   # Get (x,y) location corresponding to the k ADPs found above
+  # Get (x,y) location corresponding to the k ADPs found above
   csort_x = np.zeros((k))
   csort_y = np.zeros((k))
   ADPout = [k,32,32]
@@ -112,7 +113,7 @@ def CNN_KNN(ADP,xnum,ynum,model1):
   else:
     xest = xtrain[0]
     xest = ytrain[0]
-  # function returns estimates (x,y) location. 
+  # Function returns estimated (x,y) location. 
   return [xest, yest,2]
 
 
