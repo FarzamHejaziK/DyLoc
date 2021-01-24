@@ -2,12 +2,12 @@
 
 ## Matlab Codes
 
-In order to generates datasets required for training and testing DyLoc, we have to sart with matlab codes. First of all, you should generate scattring environments using DeepMIMO. 
-The codes for DeepMIMO and instruction for using it can be found in [DeepMIMO](http://www.deepmimo.net/). After you create your environment based on the TABLE I of the paper (or any other arbitrary parameters), you should store the resulted struct array in "DeepMIMO_dataset". Next go the "Matlab Codes" folder. "Dataset_gen.m" generates a dataset (pairs of CSI-Location) for traning DCNN, and "Dataset_gen_FPL.m" generates 1000 testframes for evaluating Dyloc. "Moving_Dataset_gen.m" generates the moving datasets for training and testing PredRNN. All of these three codes save their outout in CSV files.
+In order to generates datasets required for training and testing DyLoc, you have to start with matlab codes. First of all, you should generate scattring environments using DeepMIMO. 
+The codes for DeepMIMO and instruction for using it can be found in [DeepMIMO](http://www.deepmimo.net/). After you create your environment based on the TABLE I of the paper (or any other arbitrary parameters you choose), you should store the resulted struct array in "DeepMIMO_dataset". Next go the "Matlab Codes" folder. "Dataset_gen.m" generates a dataset (pairs of CSI-Location) for training DCNN, and "Dataset_gen_FPL.m" generates 1000 testframes for evaluating Dyloc. "Moving_Dataset_gen.m" generates the moving datasets for training and testing PredRNN. All of these three codes save their output in CSV files.
 
 ## Convert CSV to NPZ
 
-Next, go to "mat2npz" folder, copy the output CSVs of Matlab codes in the "Data" folder and then run "run.py" codes to convert CSVs to one consolidated npz file. 
+Next, go to "mat2npz" folder, copy the output CSVs of Matlab codes in the "Data" folder and then run "run.py" code to convert CSVs to one consolidated npz file. 
 
 ## Training DCNNs
 
@@ -29,7 +29,7 @@ Finally, everything is available to test DyLoc. Copy PredRNN weights to "PredRNN
 
 ## Get Rid of Matlab Codes
 
-In case you dont want to bother yourself running matlab codes. All reqired .npz files can be found in [Datasets](https://drive.google.com/drive/folders/1zXTY_Kx6ODgQFKLPeeEJ-ax2rfIZyAxR?usp=sharing). You need to copy and paste them in Data folder for doing the correspong job! Having this foler there is no need for running any Matlab codes or conversion from CSV to NPZ.
+In case you dont want to bother yourself running matlab codes. All reqired .npz files can be found in [Datasets](https://drive.google.com/drive/folders/1zXTY_Kx6ODgQFKLPeeEJ-ax2rfIZyAxR?usp=sharing). You need to copy and paste them in Data folder for doing the correspong job! Having this foler, there is no need for running any Matlab codes or conversion from CSV to NPZ.
 
 ## Data Folder
 
