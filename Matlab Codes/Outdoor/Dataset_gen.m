@@ -6,7 +6,7 @@ L = 181; % length of each rows (from DeepMIMO website)
 Nt = 64 ;  % Number of antennas at BS
 Nc = 64 ;  % Number of Subcarriers
 
-for iii = 1 : 1100 * 121
+for iii = 1 : 1100 * 181
 clearvars -except iii DeepMIMO_dataset iji 
 iii
 N = 20;  % Number of Frames
