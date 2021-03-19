@@ -13,7 +13,7 @@ input_raw_data = np.reshape(ADP,(181*1100,1,64,64))
 print(ADP.shape)
 
 ## Paired Loc Dataset for DCNN Training
-file_Loc = 'dataforpython/test_valid_half_NLOSAADP_Loc.csv'
+file_Loc = 'Data/TrainDataLoc.csv'
 Loc = np.array(pd.read_csv(file_Loc, header = None))
 Loc = np.reshape(Loc,(181*1100,3))
 print(Loc.shape)
