@@ -189,8 +189,6 @@ parser.add_argument('--is_training', type=int, default=0)
 parser.add_argument('--device', type=str, default='cuda:0')
 
 parser.add_argument('--dataset_name', type=str, default='mnist')
-parser.add_argument('--train_data_paths', type=str, default='/content/drive/My Drive/My Code Cleaned/data/Predicted-ADP-1.npz')
-parser.add_argument('--valid_data_paths', type=str, default='/content/drive/My Drive/My Code Cleaned/data/Predicted-ADP-1.npz')
 parser.add_argument('--save_dir', type=str, default='checkpoints/mnist_predrnn')
 parser.add_argument('--gen_frm_dir', type=str, default='results/mnist_predrnn')
 parser.add_argument('--input_length', type=int, default=10)
