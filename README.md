@@ -1,5 +1,14 @@
 # DyLoc: Dynamic Localization for Massive MIMO Using Predictive Recurrent Neural Networks
 
+## Publication
+
+This repository contains code for the DyLoc paper:
+
+Farzam Hejazi, Katarina Vuckovic, and Nazanin Rahnavard. "DyLoc: Dynamic Localization for Massive MIMO Using Predictive Recurrent Neural Networks." IEEE INFOCOM 2021 - IEEE Conference on Computer Communications, pp. 1-9, 2021.
+
+- Paper DOI: https://doi.org/10.1109/INFOCOM42981.2021.9488913
+- arXiv: https://arxiv.org/abs/2101.07848
+
 ## Matlab Codes
 
 In order to generates datasets required for training and testing DyLoc, you have to start with matlab codes. First of all, you should generate scattring environments using DeepMIMO. 
@@ -51,5 +60,4 @@ To improve the results significantly specifically for both O1 and I3 environment
 ## Questions
 
 If you have any question regarding the codes, dont hesitate to contact me at farzam.hejazi@gmail.com.
-
 
